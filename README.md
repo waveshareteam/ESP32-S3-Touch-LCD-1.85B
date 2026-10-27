@@ -51,7 +51,7 @@ Each example README describes setup, operation and expected results. Existing fa
 | Example | Main feature |
 | --- | --- |
 | [01_lvgl_demo](examples/esp-idf/01_lvgl_demo/) | Round-screen LVGL, touch and backlight control |
-| [02_sd_card](examples/esp-idf/02_sd_card/) | Four-bit SDMMC, capacity and file read/write verification |
+| [02_sd_card](examples/esp-idf/02_sd_card/) | Four-bit SDMMC, file read/write verification and on-screen results |
 | [03_qmi8658](examples/esp-idf/03_qmi8658/) | Acceleration, angular velocity and die temperature |
 | [04_pcf85063](examples/esp-idf/04_pcf85063/) | RTC calendar reading and setting |
 | [05_bq27220](examples/esp-idf/05_bq27220/) | Battery charge, voltage, current and capacity |

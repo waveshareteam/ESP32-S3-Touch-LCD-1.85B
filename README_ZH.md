@@ -51,7 +51,7 @@ idf.py flash monitor
 | 示例 | 功能 |
 | --- | --- |
 | [01_lvgl_demo](examples/esp-idf/01_lvgl_demo/README_ZH.md) | 圆形屏 LVGL、触摸与背光调节 |
-| [02_sd_card](examples/esp-idf/02_sd_card/README_ZH.md) | 四线 SDMMC、容量查询及文件读写校验 |
+| [02_sd_card](examples/esp-idf/02_sd_card/README_ZH.md) | 四线 SDMMC、文件读写校验及屏幕结果显示 |
 | [03_qmi8658](examples/esp-idf/03_qmi8658/README_ZH.md) | 加速度、角速度及芯片温度 |
 | [04_pcf85063](examples/esp-idf/04_pcf85063/README_ZH.md) | RTC 日历读取与设置 |
 | [05_bq27220](examples/esp-idf/05_bq27220/README_ZH.md) | 电量、电压、电流及容量读取 |
