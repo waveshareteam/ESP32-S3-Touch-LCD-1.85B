@@ -1,0 +1,22 @@
+dependencies:
+  esp_codec_dev:
+    public: true
+    version: ~1.5
+  espressif/button: ^4.1.4
+  espressif/esp_lcd_touch_cst816s: ^1.1.0
+  espressif/esp_lvgl_adapter:
+    public: true
+    version: ^0.3.*
+  idf: '>=5.5.4'
+  lvgl/lvgl: '^9.5.0'
+  espressif/esp_lcd_st77916: ^2.0.1
+  waveshare/pcf85063a: ^1.0.1
+  waveshare/qmi8658: ^1.0.1
+description: Board Support Package (BSP) for Waveshare ESP32-S3-Touch-LCD-1.85B
+repository: https://github.com/waveshareteam/ESP32-S3-Touch-LCD-1.85B.git
+tags:
+- bsp
+targets:
+- esp32s3
+url: https://www.waveshare.com/esp32-s3-touch-lcd-1.85b.htm
+version: 1.0.0

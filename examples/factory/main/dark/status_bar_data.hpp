@@ -1,0 +1,85 @@
+/*
+ * SPDX-FileCopyrightText: 2024-2025 Espressif Systems (Shanghai) CO LTD
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+#pragma once
+
+#include "systems/phone/widgets/status_bar/esp_brookesia_status_bar.hpp"
+#include "systems/phone/assets/esp_brookesia_phone_assets.h"
+
+namespace esp_brookesia::systems::phone {
+
+constexpr StatusBar::AreaData STYLESHEET_360_360_DARK_STATUS_BAR_AREA_DATA(int w_percent, StatusBar::AreaAlign align)
+{
+    return {
+        .size = gui::StyleSize::RECT_PERCENT(w_percent, 100),
+        .layout_column_align = align,
+        .layout_column_start_offset = 0,   // 圆屏顶部较窄，去掉左右偏移
+        .layout_column_pad = 6,
+    };
+}
+
+constexpr StatusBar::Data STYLESHEET_360_360_DARK_STATUS_BAR_DATA = {
+    .main = {
+        .size = gui::StyleSize::RECT(360, 80),
+        .size_min = gui::StyleSize::RECT_W_PERCENT(100, 24),
+        .size_max = gui::StyleSize::RECT_W_PERCENT(100, 60),
+        .background_color = gui::StyleColor::COLOR_WITH_OPACITY(0, 0),
+        .text_font = gui::StyleFont::SIZE(22),
+        .text_color = gui::StyleColor::COLOR(0xFFFFFF),
+    },
+    .area = {
+        // 只保留 1 个区域，居中，用来放 电量 + WiFi + 时间
+        .num = 1,
+        .data = {
+            STYLESHEET_360_360_DARK_STATUS_BAR_AREA_DATA(100, StatusBar::AreaAlign::CENTER),
+        },
+    },
+    .icon_common_size = gui::StyleSize::SQUARE(26),
+    .battery = {
+        .area_index = 0,   // 放在唯一的中间区域
+        .icon_data = {
+            .icon = {
+                .image_num = 5,
+                .images = {
+                    gui::StyleImage::IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_status_bar_battery_level1_36_36),
+                    gui::StyleImage::IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_status_bar_battery_level2_36_36),
+                    gui::StyleImage::IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_status_bar_battery_level3_36_36),
+                    gui::StyleImage::IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_status_bar_battery_level4_36_36),
+                    gui::StyleImage::IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_status_bar_battery_charge_36_36),
+                },
+            },
+        },
+    },
+    .wifi = {
+        .area_index = 0,   // 同样放在中间区域
+        .icon_data = {
+            .icon = {
+                .image_num = 4,
+                .images = {
+                    gui::StyleImage::IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_status_bar_wifi_close_36_36),
+                    gui::StyleImage::IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_status_bar_wifi_level1_36_36),
+                    gui::StyleImage::IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_status_bar_wifi_level2_36_36),
+                    gui::StyleImage::IMAGE_RECOLOR_WHITE(&esp_brookesia_image_large_status_bar_wifi_level3_36_36),
+                },
+            },
+        },
+    },
+    .clock = {
+        .area_index = 0,   // 时间也放在中间区域
+    },
+    .flags = {
+        .enable_main_size_min = 0,
+        .enable_main_size_max = 0,
+        .enable_battery_icon = 1,
+        .enable_battery_icon_common_size = 1,
+        .enable_battery_label = 1,
+        .enable_wifi_icon = 1,
+        .enable_wifi_icon_common_size = 1,
+        .enable_clock = 1,
+        .enable_battery_meter = 1,
+    },
+};
+
+} // namespace esp_brookesia::systems::phone

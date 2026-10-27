@@ -1,0 +1,15 @@
+version: 0.6.0
+dependencies:
+  brookesia_core:
+    public: true
+  espressif/esp_xiaozhi:
+    version: "0.1.1"
+    override_path: "../esp_xiaozhi"
+  espressif/mcp-c-sdk:
+    version: "2.0.1"
+    override_path: "../mcp-c-sdk"
+  espressif/cjson: "1.7.19~2"
+  espressif/esp_audio_codec: "~2.5"
+  espressif/esp_audio_effects: "1.3.0~1"
+  espressif/esp-sr: "2.4.7"
+  78/xiaozhi-fonts: "1.6.0"

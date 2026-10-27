@@ -1,0 +1,12 @@
+dependencies:
+  cmake_utilities: 0.*
+  espressif/cjson: 1.*
+  idf: '>=5.4'
+description: MCP SDK for ESP32 devices. Streamable HTTP, tools, resources, prompts,
+  completions, and tasks (2025-11-05 target; legacy 2024-11-05 transport optional).
+repository: git://github.com/espressif/esp-iot-solution.git
+repository_info:
+  commit_sha: 001a3a10f668691b175887661c0cc3bf88e7b8d0
+  path: components/mcp-c-sdk
+url: https://github.com/espressif/esp-iot-solution/tree/master/components/mcp-c-sdk
+version: 2.0.1
