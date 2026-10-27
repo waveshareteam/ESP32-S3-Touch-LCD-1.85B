@@ -19,7 +19,9 @@
           "category": "first_party_wrapper",
           "patterns": [
             "examples/esp-idf/*/components/esp32_s3_touch_lcd_1_85B/README*.md",
-            "examples/factory/components/esp32_s3_touch_lcd_1_85B/README*.md"
+            "examples/factory/components/esp32_s3_touch_lcd_1_85B/README*.md",
+            "examples/factory/components/AIChats/README*.md",
+            "examples/factory/components/MicTest/README*.md"
           ]
         }
       ]
