@@ -9,7 +9,7 @@
   </p>
   <p>
     <a href="https://www.waveshare.com/esp32-s3-touch-lcd-1.85b.htm">🌐 Product</a> &middot;
-    <a href="Firmware/">📦 Firmware</a> &middot;
+    <a href="firmware/">📦 Firmware</a> &middot;
     <a href="examples/esp-idf/">🧩 ESP-IDF</a> &middot;
     <a href="examples/Arduino-V3.2.0/">🔧 Arduino</a> &middot;
     <a href="hardware/">📚 Documentation</a>
@@ -34,15 +34,19 @@ ESP32-S3-Touch-LCD-1.85B combines a round touch display with audio, a motion sen
 
 ## 📦 Quick Start
 
-Install ESP-IDF v5.5.4, open the required example directory and run:
+1. Download `ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin` from [factory firmware](firmware/README.md).
+2. Install the flashing tool: `python -m pip install esptool`.
+3. Connect the board with a USB data cable and identify its serial port.
+4. Run these commands in the firmware directory, replacing `<PORT>` with the board port. Erasing clears settings stored on the board; back up required data first.
 
-```sh
-idf.py set-target esp32s3
-idf.py build
-idf.py flash monitor
-```
+   ```sh
+   python -m esptool --chip esp32s3 --port <PORT> erase_flash
+   python -m esptool --chip esp32s3 --port <PORT> write_flash 0x0 ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin
+   ```
 
-Each example README describes setup, operation and expected results. Existing factory binaries are in [Firmware](Firmware/); see the [factory source guide](examples/factory/README.md) for the complete application.
+5. Reset the board, connect Wi-Fi in Settings and open an application from the desktop.
+
+Factory images are flashed at `0x0`; see the [firmware guide](firmware/README.md) to select a version. To build from source, follow the individual example guides or the [factory application guide](examples/factory/README.md).
 
 ## 🧪 Examples
 
@@ -58,11 +62,22 @@ Each example README describes setup, operation and expected results. Existing fa
 | [06_mic_test](examples/esp-idf/06_mic_test/) | Dual microphone meters, recording and per-channel playback |
 | [factory](examples/factory/) | Complete desktop, settings, media and voice chat applications |
 
-All six basic examples and the factory project use the same local BSP implementation. Each basic example initializes only its required peripherals.
+Use the standalone examples to test the display, touch, storage, sensors, clock, battery and dual microphone audio. The factory application provides the complete desktop and combined feature demonstrations.
 
 ### Arduino
 
-Original sketches and bundled libraries are in [examples/Arduino-V3.2.0](examples/Arduino-V3.2.0/), with their existing usage instructions.
+| Example | Main feature |
+| --- | --- |
+| [01_lvgl_demo](examples/Arduino-V3.2.0/examples/01_lvgl_demo/) | LVGL display and touch |
+| [02_lvgl_BQ27220](examples/Arduino-V3.2.0/examples/02_lvgl_BQ27220/) | Battery gauge display |
+| [03_audio_out_no_tf](examples/Arduino-V3.2.0/examples/03_audio_out_no_tf/) | Audio output without an SD card |
+| [04_SDMMC_Test](examples/Arduino-V3.2.0/examples/04_SDMMC_Test/) | SDMMC card test |
+| [05_audio_out_tf](examples/Arduino-V3.2.0/examples/05_audio_out_tf/) | Audio playback from an SD card |
+| [06_esp_sr](examples/Arduino-V3.2.0/examples/06_esp_sr/) | Speech recognition |
+| [07_I2C_qmi8658](examples/Arduino-V3.2.0/examples/07_I2C_qmi8658/) | QMI8658 motion sensor |
+| [08_I2C_pcf85063](examples/Arduino-V3.2.0/examples/08_I2C_pcf85063/) | PCF85063 RTC |
+
+Use the matching libraries provided in the [bundled libraries directory](examples/Arduino-V3.2.0/libraries/).
 
 ## 🛠️ Development Environment
 
@@ -70,11 +85,11 @@ Original sketches and bundled libraries are in [examples/Arduino-V3.2.0](example
 | --- | --- | --- |
 | ESP-IDF | v5.5.4 | Six basic examples and factory project |
 | LVGL | 9.5.0 | ESP-IDF display examples and factory project |
-| Arduino-ESP32 | 3.2.0 | Original Arduino examples |
+| Arduino-ESP32 | 3.2.0 | Eight Arduino examples |
 
 ## 📚 Resources
 
-- [Hardware documentation](hardware/)
+- [Schematic Rev1.1](hardware/ESP32-S3-Touch-LCD-1.85B%20Rev1.1.pdf)
 - [Product page](https://www.waveshare.com/esp32-s3-touch-lcd-1.85b.htm)
 - [Product Wiki](https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-1.85B)
 

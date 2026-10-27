@@ -1,29 +1,31 @@
-# ESP32-S3-Touch-LCD-1.85B Factory Firmware
+# Factory Application
 
 [English](README.md) | [简体中文](README_ZH.md)
 
 ## Function
 
-A complete 360 x 360 round-screen desktop with four applications per page; the first page contains Display Test, Settings, AIChats and Battery. Other applications include Touch Test, Photos, Weather, Music, Sensor, 2048, Mic Test, Button Test, VideoPlayer and the original gravity game; voice chat runs inside AIChats without switching firmware partitions.
+A 360 × 360 round-screen desktop with four icons per page: Display Test, Settings, AIChats, Battery, Touch Test, Photos, Weather, Music, Sensor, 2048, Mic Test, Button Test, Video and Gravity. Swipe left or right to change pages; voice chat opens directly in AIChats.
 
 ## Hardware
 
-ESP32-S3-Touch-LCD-1.85B with 16 MB Flash and 8 MB PSRAM, a speaker and the supplied 3.7 V, 500 mAh battery; online functions require 2.4 GHz Wi-Fi. Media applications require a FAT-formatted microSD card with JPEG images in photo/, MP3 files in music/, and AVI/MJPEG videos in video/ (frames up to 360 x 360; AVI audio tracks are not played).
+ESP32-S3-Touch-LCD-1.85B, a speaker and the supplied 3.7 V, 500 mAh battery; online features need 2.4 GHz Wi-Fi. For media, insert a FAT32 microSD card with JPEG images in `photo/`, MP3 files in `music/`, and AVI/MJPEG videos in `video/` (frames up to 360 × 360; video audio tracks are not played).
 
 ## Run
 
-Use ESP-IDF v5.5.4 from this directory:
+For a ready-to-flash image, follow the [firmware guide](../../firmware/README.md). To build this application, use ESP-IDF v5.5.4 and run:
 
 ```sh
-idf.py build flash monitor
+idf.py set-target esp32s3
+idf.py build
+idf.py flash monitor
 ```
 
-Configure Wi-Fi in Settings, or connect to the S3-LCD-1.85B-xxxxxx hotspot (password 12345678) and open http://192.168.4.1; without saved credentials the station initially tries weather-wifi / 12345678.
+Connect Wi-Fi in Settings, or connect to the `S3-LCD-1.85B-xxxxxx` hotspot with password `12345678` and open `http://192.168.4.1`. Open AIChats after connecting and follow its activation instructions if prompted.
 
 ## Expected behavior
 
-The backlight turns on after the first frame, and horizontal swipes change desktop pages; Photos fills the round screen with a centered crop, while video uses a 240 x 240 preview area. Mic Test displays both microphone levels and records up to five seconds in PSRAM for separate MIC1/MIC2 playback; AIChats uses both microphones and the MIC3 playback reference for echo cancellation, wake-word interruption, and voice commands for volume and brightness.
+The desktop shows time, Wi-Fi and battery status; Photos fills the round screen, and Video displays a 240 × 240 preview. Mic Test shows separate MIC1/MIC2 levels and records up to five seconds for per-channel playback; AIChats supports voice conversation, wake-word interruption, and volume and brightness commands.
 
 ## FAQ
 
-The hardware RTC retains a valid calendar across resets independently of network time; an invalid calendar is initialized to 2025-01-01 12:00:00. Connect the battery before USB for battery measurements: hot-plug detection and forced charge-level re-estimation are not implemented, gauge temperature is not ambient temperature, and Music, Mic Test and AIChats must release their shared audio session before switching applications.
+The Sensor RTC calendar runs independently; network time updates the desktop clock. Connect the battery before USB for battery measurements: USB-only or hot-plug readings can be inaccurate, and gauge temperature is not ambient temperature; recordings are temporary, and you should exit the current audio application before opening another.

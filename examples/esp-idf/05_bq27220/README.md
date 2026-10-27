@@ -24,4 +24,4 @@ The serial monitor updates once per second. Positive current indicates charging 
 
 ## FAQ
 
-Connect the supplied battery before USB power. BIN is pulled down on this board, so USB-only or hot-plug readings do not reliably identify battery presence or charge level; temperature is the gauge internal temperature.
+Connect the supplied battery before USB. USB-only readings can show 100% and present=1 without an attached or fully charged battery; readings after battery hot-plugging can be inaccurate, and the gauge temperature is not ambient temperature.
