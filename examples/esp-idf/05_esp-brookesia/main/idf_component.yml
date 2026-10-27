@@ -1,5 +1,0 @@
-## IDF Component Manager Manifest File
-dependencies:
-  brookesia_core:
-    version: '*'
-

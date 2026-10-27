@@ -1,0 +1,14 @@
+menu "ESP32-S3 Touch LCD 1.85B BSP"
+    config BSP_LCD_SPI_CLOCK_HZ
+        int "LCD QSPI clock (Hz)"
+        range 10000000 80000000
+        default 80000000
+    config BSP_LCD_BUFFER_HEIGHT
+        int "LVGL draw buffer height"
+        range 10 360
+        default 16
+    config BSP_LCD_BRIGHTNESS
+        int "Initial backlight percentage"
+        range 0 100
+        default 100
+endmenu
