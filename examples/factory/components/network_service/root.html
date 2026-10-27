@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S3 LCD Wi-Fi Setup</title>
+<style>
+*{box-sizing:border-box}body{font-family:system-ui,sans-serif;color:#171717;background:#f5f5f5;margin:0;padding:36px 20px}main{max-width:420px;margin:auto;background:white;border:1px solid #ddd;border-radius:18px;padding:28px}h1{font-size:26px;margin:0 0 10px}p{line-height:1.6}label{display:block;margin:22px 0 7px;font-weight:600}input,button{width:100%;font:inherit;border:1px solid #aaa;border-radius:8px;padding:13px}button{margin-top:26px;color:white;background:#111;border-color:#111;cursor:pointer}button:disabled{opacity:.5}#result{min-height:48px;margin-bottom:0;font-size:14px}.note{font-size:14px;color:#555}
+</style>
+<main><h1>Connect to Wi-Fi</h1><p class="note">Connect your S3 LCD device to a 2.4 GHz Wi-Fi network. Once connected, the network settings will be saved for automatic reconnection.</p>
+<form id="form"><label for="ssid">Network name (SSID)</label><input id="ssid" name="ssid" autocomplete="off" required>
+<label for="password">Password</label><input id="password" name="password" type="password" autocomplete="off" placeholder="Leave blank for an open network">
+<button id="submit">Connect and Save</button></form><p id="result" role="status" aria-live="polite"></p></main>
+<script>
+const form=document.getElementById('form'),button=document.getElementById('submit'),result=document.getElementById('result');
+const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function timedFetch(url,options={},timeout=8000){
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeout);
+  try{return await fetch(url,{...options,signal:controller.signal})}finally{clearTimeout(timer)}
+}
+form.addEventListener('submit',async event=>{
+  event.preventDefault();
+  const ssid=document.getElementById('ssid').value,password=document.getElementById('password').value;
+  const encoder=new TextEncoder(),n=encoder.encode(ssid).length,p=encoder.encode(password).length;
+  if(!n||n>32){result.textContent='Network name must be 1-32 bytes.';return}
+  if(p!==0&&!(p>=8&&p<=63)&&!(p===64&&/^[0-9a-f]{64}$/i.test(password))){result.textContent='Password must be 8-63 bytes or 64 hexadecimal characters. Leave it blank for an open network.';return}
+  button.disabled=true;result.textContent='Submitting...';
+  try{
+    const response=await timedFetch('/wifi_config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ssid,password})});
+    if(!response.ok){
+      result.textContent=response.status===409?'The device is busy. Please wait and try again.':'Could not submit the settings. Check the network name and password, then try again.';
+      return;
+    }
+    result.textContent='Connecting to Wi-Fi. Please wait...';
+    for(let i=0;i<55;i++){
+      await delay(1000);
+      let state;
+      try{const reply=await timedFetch('/status',{cache:'no-store'},2500);state=await reply.json()}
+      catch(error){continue}
+      if(state.connected&&!state.connecting){
+        result.textContent=state.credentials_saved?'Connected and saved. You can close this page. The S3 LCD setup hotspot will turn off shortly.':'Connected, but the settings could not be saved. You may need to set up Wi-Fi again after restarting the device.';
+        return;
+      }
+      if(!state.connecting){result.textContent=state.message||'Connection failed. Check the password and make sure the network uses 2.4 GHz, then try again.';return}
+    }
+    result.textContent='No confirmation received. Check the device screen. If it is not connected, try again.';
+  }catch(error){result.textContent=error.name==='AbortError'?'The request timed out. Make sure your phone is still connected to the S3 LCD setup hotspot, then try again.':'Unable to reach the device. Make sure your phone is still connected to the S3 LCD setup hotspot, then try again.'}
+  finally{button.disabled=false}
+});
+</script>
+</html>
