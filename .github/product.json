@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/waveshareteam/esp32-repo-template/v1/schema/product.schema.json",
+  "product": "ESP32-S3-Touch-LCD-1.85B",
+  "product_url": "https://www.waveshare.com/esp32-s3-touch-lcd-1.85b.htm",
+  "tier": 0,
+  "target": "esp32s3",
+  "esp_idf": {
+    "versions": [
+      "v5.5.4"
+    ]
+  },
+  "factory_firmware": {
+    "esp_idf": "v5.5.4"
+  },
+  "overrides": {
+    "markdown_audit": {
+      "classification_rules": [
+        {
+          "category": "first_party_wrapper",
+          "patterns": [
+            "examples/esp-idf/*/components/esp32_s3_touch_lcd_1_85B/README*.md",
+            "examples/factory/components/esp32_s3_touch_lcd_1_85B/README*.md"
+          ]
+        }
+      ]
+    }
+  }
+}
