@@ -108,7 +108,7 @@ bool MicTest::run()
     lv_obj_set_style_bg_color(root_, lv_color_white(), 0);
     lv_obj_set_style_bg_opa(root_, LV_OPA_COVER, 0);
     lv_obj_remove_flag(root_, LV_OBJ_FLAG_SCROLLABLE);
-    auto *title = label(root_, "Dual Microphone Test", 60, 48, 240, &lv_font_montserrat_18);
+    auto *title = label(root_, "Mic Test", 60, 48, 240, &lv_font_montserrat_18);
     lv_obj_set_style_text_align(title, LV_TEXT_ALIGN_CENTER, 0);
     meters_[0] = createMeter("MIC1", 92);
     meters_[1] = createMeter("MIC2", 144);

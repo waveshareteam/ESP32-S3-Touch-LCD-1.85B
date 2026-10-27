@@ -55,7 +55,7 @@ Each example README describes setup, operation and expected results. Existing fa
 | [03_qmi8658](examples/esp-idf/03_qmi8658/) | Acceleration, angular velocity and die temperature |
 | [04_pcf85063](examples/esp-idf/04_pcf85063/) | RTC calendar reading and setting |
 | [05_bq27220](examples/esp-idf/05_bq27220/) | Battery charge, voltage, current and capacity |
-| [06_audio](examples/esp-idf/06_audio/) | Dual microphone meters, recording and per-channel playback |
+| [06_mic_test](examples/esp-idf/06_mic_test/) | Dual microphone meters, recording and per-channel playback |
 | [factory](examples/factory/) | Complete desktop, settings, media and voice chat applications |
 
 All six basic examples and the factory project use the same local BSP implementation. Each basic example initializes only its required peripherals.

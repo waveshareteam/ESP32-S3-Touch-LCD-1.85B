@@ -55,7 +55,7 @@ idf.py flash monitor
 | [03_qmi8658](examples/esp-idf/03_qmi8658/README_ZH.md) | 加速度、角速度及芯片温度 |
 | [04_pcf85063](examples/esp-idf/04_pcf85063/README_ZH.md) | RTC 日历读取与设置 |
 | [05_bq27220](examples/esp-idf/05_bq27220/README_ZH.md) | 电量、电压、电流及容量读取 |
-| [06_audio](examples/esp-idf/06_audio/README_ZH.md) | 双麦克风音量条、录音及分通道回放 |
+| [06_mic_test](examples/esp-idf/06_mic_test/README_ZH.md) | 双麦克风音量条、录音及分通道回放 |
 | [factory](examples/factory/README_ZH.md) | 完整桌面、设置、媒体应用和语音对话 |
 
 六个基础示例和出厂工程使用相同的本地 BSP 实现，每个基础示例只初始化其所需外设。

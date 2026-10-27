@@ -1,4 +1,4 @@
-# 双麦克风与音频测试
+# 麦克风测试
 
 [English](README.md) | [简体中文](README_ZH.md)
 
