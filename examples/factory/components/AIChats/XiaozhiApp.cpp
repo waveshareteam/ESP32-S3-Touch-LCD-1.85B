@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "bsp_board_extra.h"
+#include "wifi_manager.h"
 #include "esp_wifi.h"
 #include "decoder/impl/esp_opus_dec.h"
 #include "encoder/impl/esp_opus_enc.h"
@@ -849,8 +850,9 @@ bool XiaozhiApp::canPrepare() const
 
 bool XiaozhiApp::isNetworkReady() const
 {
-    wifi_ap_record_t ap = {};
-    return esp_wifi_sta_get_ap_info(&ap) == ESP_OK && netifHasIpv4("WIFI_STA_DEF");
+    // The shared service tracks connection events without querying the Wi-Fi
+    // driver every 100 ms while STA is disconnected.
+    return wifi_manager_is_connected() && netifHasIpv4("WIFI_STA_DEF");
 }
 
 void XiaozhiApp::updateNetworkState()
