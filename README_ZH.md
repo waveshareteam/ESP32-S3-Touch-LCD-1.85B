@@ -34,14 +34,14 @@ ESP32-S3-Touch-LCD-1.85B 集成圆形触摸显示屏及音频、运动传感器�
 
 ## 📦 快速开始
 
-1. 从[出厂固件目录](firmware/README_ZH.md)下载最新版 `ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin`。
+1. 从[出厂固件目录](firmware/README_ZH.md)下载最新版 `ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261109.bin`。
 2. 安装烧录工具：`python -m pip install esptool`。
 3. 使用 USB 数据线连接开发板，确认其串口名称。
-4. 在固件所在目录执行以下命令，将 `<PORT>` 替换为开发板串口；擦除会清除板上保存的设置，请先备份所需数据。
+4. 在固件所在目录执行以下命令，将 `<PORT>` 替换为开发板串口；擦除会清除板上保存的设置和徽章图片，请先备份所需数据。
 
    ```sh
    python -m esptool --chip esp32s3 --port <PORT> erase_flash
-   python -m esptool --chip esp32s3 --port <PORT> write_flash 0x0 ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin
+   python -m esptool --chip esp32s3 --port <PORT> write_flash 0x0 ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261109.bin
    ```
 
 5. 复位后进入桌面，在 Settings 中连接 Wi-Fi，再打开所需应用。
@@ -60,7 +60,7 @@ ESP32-S3-Touch-LCD-1.85B 集成圆形触摸显示屏及音频、运动传感器�
 | [04_pcf85063](examples/esp-idf/04_pcf85063/README_ZH.md) | RTC 日历读取与设置 |
 | [05_bq27220](examples/esp-idf/05_bq27220/README_ZH.md) | 电量、电压、电流及容量读取 |
 | [06_mic_test](examples/esp-idf/06_mic_test/README_ZH.md) | 双麦克风音量条、录音及分通道回放 |
-| [factory](examples/factory/README_ZH.md) | 完整桌面、设置、媒体应用和语音对话 |
+| [factory](examples/factory/README_ZH.md) | 完整桌面、媒体、语音对话、电子徽章、幸运转盘和时钟表盘 |
 
 基础示例可分别测试显示、触摸、SD 卡、传感器、时钟、电池和双麦音频；出厂应用提供完整桌面及综合功能演示。
 

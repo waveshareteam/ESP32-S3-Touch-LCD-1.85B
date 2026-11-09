@@ -6,16 +6,19 @@ Download a merged image for ESP32-S3-Touch-LCD-1.85B and flash it at `0x0`. Choo
 
 | File | Purpose |
 | --- | --- |
-| [ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin](ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin) | Current factory application: round desktop, settings, media, peripheral tests and voice chat |
+| [ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261109.bin](ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261109.bin) | Current factory application: Badge, Lucky Wheel, Watch and shared Wi-Fi/image-transfer web tools, plus existing applications |
+| [ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin](ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin) | Previous factory application: round desktop, settings, media, peripheral tests and voice chat |
 | [ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20260328.bin](ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20260328.bin) | Earlier factory demonstration |
 
 ## Flash
 
-Install esptool with `python -m pip install esptool`, connect the board over USB, and replace `<PORT>` with its serial port. Erasing clears saved settings; back up required data first.
+Install esptool with `python -m pip install esptool`, connect the board over USB, and replace `<PORT>` with its serial port. Erasing clears saved settings and badge images; back up required data first.
 
 ```sh
 python -m esptool --chip esp32s3 --port <PORT> erase_flash
-python -m esptool --chip esp32s3 --port <PORT> write_flash 0x0 ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin
+python -m esptool --chip esp32s3 --port <PORT> write_flash 0x0 ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261109.bin
 ```
+
+The latest image excludes the `assets` SPIFFS partition used for uploaded badge photos; it includes the speech models. To keep photos already stored on a board, skip `erase_flash`.
 
 Reset the board after flashing. The current application source and usage instructions are in [examples/factory](../examples/factory/README.md); the earlier binary has a different application set.
