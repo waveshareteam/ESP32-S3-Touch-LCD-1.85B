@@ -21,7 +21,7 @@ A 360 × 360 round-screen desktop with four icons per page: Display Test, Settin
 | Mic Test | Show separate microphone meters, record and play back each channel | Tap Record for up to five seconds, or Stop to finish early; use MIC1/MIC2 to play each recording; no SD card required. |
 | Button Test | Check BOOT input state and valid press counts | Press and release BOOT to obtain PASS; tap Test again to reset; BOOT is the test input in this APP. |
 | Video | Play AVI/MJPEG videos from the SD card | Put files in `video/` and select a list entry; tap the playback area to stop and return to the list; video audio tracks are not played. |
-| Gravity | Control simulated balls using the motion sensor | Hold the board still during calibration, then tilt it; press BOOT to recalibrate or tap back to exit. |
+| Gravity | Tilt the board to move the character and collect coins | Hold the board still during calibration, then tilt it; press BOOT to recalibrate or tap back to exit. |
 | Badge | Store and display up to six static badge photos in internal Flash | Upload/crop in a browser, swipe between photos, and tap to open controls; no SD card needed; photos survive restart. |
 | Lucky Wheel | Full-screen wheel that randomly selects a number | Tap SPIN; use Options for 2–18 choices; no network or SD card required. |
 | Watch | Analog clock with time/date and synchronization status | Tap to cycle three views; RTC restores time at boot and network synchronization updates RTC; swipe up from the bottom edge or press BOOT to exit. |
