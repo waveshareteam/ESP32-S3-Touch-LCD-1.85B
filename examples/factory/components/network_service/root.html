@@ -4,47 +4,92 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>S3 LCD Wi-Fi Setup</title>
 <style>
-*{box-sizing:border-box}body{font-family:system-ui,sans-serif;color:#171717;background:#f5f5f5;margin:0;padding:36px 20px}main{max-width:420px;margin:auto;background:white;border:1px solid #ddd;border-radius:18px;padding:28px}h1{font-size:26px;margin:0 0 10px}p{line-height:1.6}label{display:block;margin:22px 0 7px;font-weight:600}input,button{width:100%;font:inherit;border:1px solid #aaa;border-radius:8px;padding:13px}button{margin-top:26px;color:white;background:#111;border-color:#111;cursor:pointer}button:disabled{opacity:.5}#result{min-height:48px;margin-bottom:0;font-size:14px}.note{font-size:14px;color:#555}
+*{box-sizing:border-box}body{font-family:system-ui,sans-serif;color:#202b36;background:#f2f4f6;margin:0;padding:28px 18px}main{max-width:460px;margin:auto;background:white;border:1px solid #e2e7ec;border-radius:22px;padding:26px}h1{font-size:28px;margin:24px 0 10px}p{line-height:1.6}label{display:block;margin:20px 0 7px;font-weight:600}input,button,select{width:100%;font:inherit;border:1px solid #c9d1d8;border-radius:12px;padding:13px;background:white;color:inherit}button{margin-top:16px;color:white;background:#42695f;border-color:#42695f;cursor:pointer}button.secondary{background:#edf2f0;color:#42695f;border-color:#edf2f0}button:disabled{opacity:.5;cursor:wait}#result,#scanResult{min-height:24px;font-size:14px}.note{font-size:14px;color:#647181}a{color:#42695f;text-decoration:none}
 </style>
-<main><h1>Connect to Wi-Fi</h1><p class="note">Connect your S3 LCD device to a 2.4 GHz Wi-Fi network. Once connected, the network settings will be saved for automatic reconnection.</p>
-<form id="form"><label for="ssid">Network name (SSID)</label><input id="ssid" name="ssid" autocomplete="off" required>
-<label for="password">Password</label><input id="password" name="password" type="password" autocomplete="off" placeholder="Leave blank for an open network">
-<button id="submit">Connect and Save</button></form><p id="result" role="status" aria-live="polite"></p></main>
+<main>
+  <a href="/">&#8592; Device home</a>
+  <h1>Wi-Fi Setup</h1>
+  <p class="note">Connect your device to a 2.4 GHz network. Saved credentials are used automatically after restart.</p>
+  <p id="current" class="note" role="status"></p>
+  <button id="scan" class="secondary" type="button">Scan nearby networks</button>
+  <label for="networks">Nearby networks</label>
+  <select id="networks"><option value="">Scan, or enter a network name below</option></select>
+  <p id="scanResult" class="note" role="status" aria-live="polite"></p>
+  <form id="form">
+    <label for="ssid">Network name (SSID)</label><input id="ssid" name="ssid" autocomplete="off" required>
+    <label for="password">Password</label><input id="password" name="password" type="password" autocomplete="off" placeholder="Leave blank for an open network">
+    <button id="submit">Connect and Save</button>
+  </form>
+  <p id="result" role="status" aria-live="polite"></p>
+  <p class="note">The device hotspot stays available after setup. Return home to transfer images, or disconnect when finished.</p>
+</main>
 <script>
 const form=document.getElementById('form'),button=document.getElementById('submit'),result=document.getElementById('result');
+const scanButton=document.getElementById('scan'),networks=document.getElementById('networks'),scanResult=document.getElementById('scanResult'),current=document.getElementById('current');
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function timedFetch(url,options={},timeout=8000){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeout);
   try{return await fetch(url,{...options,signal:controller.signal})}finally{clearTimeout(timer)}
 }
+async function getState(){const response=await timedFetch('/status',{cache:'no-store'});if(!response.ok)throw new Error('Device unavailable');return response.json()}
+async function scanNetworks(){
+  scanButton.disabled=button.disabled=true;scanResult.textContent='Scanning nearby 2.4 GHz networks...';
+  try{
+    const response=await timedFetch('/wifi/scan',{method:'POST'});
+    if(!response.ok)throw new Error('The device is busy. Wait for Wi-Fi setup to finish, then retry.');
+    let page;
+    for(let i=0;i<25;i++){
+      await delay(700);
+      const reply=await timedFetch('/wifi/scan',{cache:'no-store'});
+      if(!reply.ok)throw new Error('Could not read scan results. Retry.');
+      page=await reply.json();if(!page.running)break;
+    }
+    if(!page||page.running)throw new Error('Scan timed out. Retry.');
+    if(page.error)throw new Error('Scan failed. Please retry.');
+    const records=[...page.records],revision=page.revision;
+    for(let first=4;first<page.count;first+=4){
+      const reply=await timedFetch(`/wifi/scan?first=${first}`,{cache:'no-store'});
+      if(!reply.ok)throw new Error('Could not read scan results. Retry.');
+      const next=await reply.json();
+      if(next.running||next.revision!==revision)throw new Error('Scan results changed. Please scan again.');
+      records.push(...next.records);
+    }
+    networks.replaceChildren(new Option('Select a network, or enter its name below',''));
+    const seen=new Set();
+    records.sort((a,b)=>b.rssi-a.rssi).forEach(ap=>{
+      if(!ap.ssid||seen.has(ap.ssid))return;seen.add(ap.ssid);
+      networks.add(new Option(`${ap.ssid} · ${ap.security} · ${ap.rssi} dBm`,ap.ssid));
+    });
+    scanResult.textContent=seen.size?`${seen.size} network${seen.size===1?'':'s'} found. Select one above.`:'No named networks found. Retry or enter a hidden network name.';
+  }catch(error){scanResult.textContent=error.message||'Unable to reach the device. Reconnect to its hotspot and retry.'}
+  finally{scanButton.disabled=button.disabled=false}
+}
+scanButton.addEventListener('click',scanNetworks);
+networks.addEventListener('change',()=>{if(networks.value)document.getElementById('ssid').value=networks.value});
 form.addEventListener('submit',async event=>{
-  event.preventDefault();
+  event.preventDefault();if(button.disabled)return;
   const ssid=document.getElementById('ssid').value,password=document.getElementById('password').value;
   const encoder=new TextEncoder(),n=encoder.encode(ssid).length,p=encoder.encode(password).length;
   if(!n||n>32){result.textContent='Network name must be 1-32 bytes.';return}
   if(p!==0&&!(p>=8&&p<=63)&&!(p===64&&/^[0-9a-f]{64}$/i.test(password))){result.textContent='Password must be 8-63 bytes or 64 hexadecimal characters. Leave it blank for an open network.';return}
-  button.disabled=true;result.textContent='Submitting...';
+  button.disabled=scanButton.disabled=true;result.textContent='Submitting...';
   try{
     const response=await timedFetch('/wifi_config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ssid,password})});
-    if(!response.ok){
-      result.textContent=response.status===409?'The device is busy. Please wait and try again.':'Could not submit the settings. Check the network name and password, then try again.';
-      return;
-    }
+    if(!response.ok){result.textContent=response.status===409?'The device is busy. Finish the image editor or wait for the Wi-Fi operation, then retry.':'Could not submit settings. Check the network name and password, then retry.';return}
     result.textContent='Connecting to Wi-Fi. Please wait...';
     for(let i=0;i<55;i++){
-      await delay(1000);
-      let state;
-      try{const reply=await timedFetch('/status',{cache:'no-store'},2500);state=await reply.json()}
-      catch(error){continue}
+      await delay(1000);let state;
+      try{state=await getState()}catch(error){continue}
       if(state.connected&&!state.connecting){
-        result.textContent=state.credentials_saved?'Connected and saved. You can close this page. The S3 LCD setup hotspot will turn off shortly.':'Connected, but the settings could not be saved. You may need to set up Wi-Fi again after restarting the device.';
-        return;
+        result.textContent=state.credentials_saved?'Connected and saved. Return to Device home to transfer images.':'Connected, but settings could not be saved. Please retry setup before restarting.';
+        current.textContent=`Connected to ${state.ssid}`;return;
       }
-      if(!state.connecting){result.textContent=state.message||'Connection failed. Check the password and make sure the network uses 2.4 GHz, then try again.';return}
+      if(!state.connecting){result.textContent=state.message||'Connection failed. Check the password and 2.4 GHz support, then retry.';return}
     }
-    result.textContent='No confirmation received. Check the device screen. If it is not connected, try again.';
-  }catch(error){result.textContent=error.name==='AbortError'?'The request timed out. Make sure your phone is still connected to the S3 LCD setup hotspot, then try again.':'Unable to reach the device. Make sure your phone is still connected to the S3 LCD setup hotspot, then try again.'}
-  finally{button.disabled=false}
+    result.textContent='No confirmation received. Check the device screen and retry if needed.';
+  }catch(error){result.textContent='Unable to reach the device. Make sure your phone is still connected to its hotspot, then retry.'}
+  finally{button.disabled=scanButton.disabled=false}
 });
+getState().then(state=>{current.textContent=state.connected?`Currently connected to ${state.ssid}`:'Device is not connected to a Wi-Fi network.'}).catch(()=>{current.textContent='Reconnect to the device hotspot if this page stops responding.'});
 </script>
 </html>

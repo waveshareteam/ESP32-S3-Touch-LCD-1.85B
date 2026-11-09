@@ -174,7 +174,7 @@ void Settings::show(Page page)
         values_[1] = label(body_, "", 58, 364, 132, &lv_font_montserrat_14, MUTED);
         lv_obj_set_style_text_align(values_[1], LV_TEXT_ALIGN_CENTER, 0);
     } else if (page == PROVISION) {
-        set_text(title_, "Wi-Fi setup");
+        set_text(title_, "Phone connection");
         auto *intro = label(body_, "Scan to join the device hotspot", 0, 0, CONTENT_W, &lv_font_montserrat_14);
         lv_obj_set_style_text_align(intro, LV_TEXT_ALIGN_CENTER, 0);
         auto *qr_card = box(body_, 0, 28, CONTENT_W, 168);
@@ -195,7 +195,7 @@ void Settings::show(Page page)
         values_[0]=label(card,"",12,14,224,&lv_font_montserrat_16);
         label(card,"Password: " WIFI_PROVISION_PASSWORD,12,40,224,&lv_font_montserrat_14,MUTED);
         label(card,WIFI_PROVISION_URL,12,64,224,&lv_font_montserrat_14,ACCENT);
-        label(body_,"After joining, open 192.168.4.1\nto enter your 2.4 GHz Wi-Fi details.",8,324,232,&lv_font_montserrat_12,MUTED);
+        label(body_,"Open 192.168.4.1, then choose\nWi-Fi Setup or Transfer Images.",8,324,232,&lv_font_montserrat_12,MUTED);
         values_[1]=label(body_,"",8,360,232,&lv_font_montserrat_12,ACCENT);
     } else if (page == SD) {
         set_text(title_, "SD card");
@@ -281,7 +281,7 @@ void Settings::refresh()
     } else if (page_ == PROVISION) {
         wifi_manager_snapshot_t net={}; wifi_manager_get_snapshot(&net);
         // Retry only until the worker accepts this visit's request. Never reopen
-        // the hotspot automatically after successful provisioning or an error.
+        // the hotspot automatically after an explicit browser disconnect.
         if (!portal_requested_ && net.ready) {
             portal_requested_ = wifi_manager_start_provisioning();
             wifi_manager_get_snapshot(&net);
@@ -291,10 +291,7 @@ void Settings::refresh()
         const char *status = net.message[0] ? net.message : "Waiting for Wi-Fi...";
         const char *hint = status;
         const bool provisioned = net.provisioning_success && net.connected;
-        if (provisioned) {
-            hint = "Connected!\nYou can go back.";
-            status = net.credentials_saved ? "Connected and saved." : "Connected; could not save Wi-Fi.";
-        } else if (net.provisioning) {
+        if (net.provisioning) {
             if (qr_ && net.ap_ssid[0] && std::strcmp(qr_ssid_, net.ap_ssid)) {
                 // The generated AP name/password contain no QR-reserved characters.
                 char payload[128];
@@ -306,7 +303,8 @@ void Settings::refresh()
             }
             hint = "QR unavailable.\nJoin the hotspot manually.";
         }
-        const bool show_qr = net.provisioning && !provisioned && qr_valid_;
+        if (provisioned) status = net.credentials_saved ? "Wi-Fi saved. Web tools stay open." : "Connected; could not save Wi-Fi.";
+        const bool show_qr = net.provisioning && qr_valid_;
         if (qr_) {
             if (show_qr) lv_obj_remove_flag(qr_, LV_OBJ_FLAG_HIDDEN);
             else lv_obj_add_flag(qr_, LV_OBJ_FLAG_HIDDEN);

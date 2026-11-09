@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S3 LCD Device Home</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:40px 20px;background:#f2f4f6;color:#202b36;font-family:system-ui,sans-serif}main{max-width:460px;margin:auto}small{color:#647181;letter-spacing:.12em}h1{margin:12px 0;font-size:32px;font-weight:650}p{color:#647181;line-height:1.6}.choices{display:grid;gap:14px;margin:30px 0}.choice{display:grid;grid-template-columns:48px 1fr 20px;align-items:center;gap:16px;background:white;border-radius:20px;padding:24px 20px;text-decoration:none;color:inherit;border:1px solid #e2e7ec}.choice:focus-visible,.choice:hover{outline:2px solid #7d9c94;outline-offset:3px}.symbol{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:#edf2f0;color:#42695f;font-size:25px}.choice strong{display:block;font-size:19px}.choice span.detail{display:block;margin-top:5px;color:#647181;font-size:14px;line-height:1.5}button{font:inherit;background:transparent;color:#617080;border:0;padding:12px 0;cursor:pointer}button:disabled{opacity:.5}#result{min-height:26px;font-size:14px}.foot{font-size:13px;color:#76818e}a{color:#42695f}
+</style>
+<main>
+  <small>ESP32-S3 · TOUCH LCD 1.85B</small>
+  <h1>Your device, connected.</h1>
+  <p>Choose what you would like to do. Keep your phone connected to the device hotspot.</p>
+  <div class="choices">
+    <a class="choice" href="/wifi"><span class="symbol" aria-hidden="true">&#9678;</span><span><strong>Wi-Fi Setup</strong><span class="detail">Find a 2.4 GHz network and connect your device.</span></span><span aria-hidden="true">&#8250;</span></a>
+    <a class="choice" href="/badge"><span class="symbol" aria-hidden="true">&#9639;</span><span><strong>Transfer Images</strong><span class="detail">Crop, upload and manage your six badge images.</span></span><span aria-hidden="true">&#8250;</span></a>
+  </div>
+  <p class="foot">Image transfer works without Internet access. If your phone reports “No Internet”, stay connected to this hotspot.</p>
+  <button id="disconnect" type="button">Disconnect &amp; close hotspot</button>
+  <p id="result" role="status" aria-live="polite"></p>
+</main>
+<script>
+const disconnect=document.getElementById('disconnect'),result=document.getElementById('result');
+disconnect.addEventListener('click',async()=>{
+  disconnect.disabled=true;
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
+  try{
+    const response=await fetch('/portal/close',{method:'POST',signal:controller.signal});
+    if(!response.ok)throw new Error('Could not close the hotspot. Please retry.');
+    result.textContent='Hotspot closed. You can return to your normal Wi-Fi network.';
+    document.querySelectorAll('.choice').forEach(link=>{link.removeAttribute('href');link.setAttribute('aria-disabled','true')});
+  }catch(error){result.textContent='Device unavailable. If the hotspot is still active, reconnect and retry.';disconnect.disabled=false}
+  finally{clearTimeout(timer)}
+});
+</script>
+</html>
