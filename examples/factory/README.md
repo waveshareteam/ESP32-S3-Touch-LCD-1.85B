@@ -6,6 +6,26 @@
 
 A 360 × 360 round-screen desktop with four icons per page: Display Test, Settings, AIChats, Battery, Touch Test, Photos, Weather, Music, Sensor, 2048, Mic Test, Button Test, Video, Gravity, Badge, Lucky Wheel and Watch. Swipe left or right to change pages; voice chat opens directly in AIChats.
 
+| APP | Function | Operation and requirements |
+| --- | --- | --- |
+| Display Test | Cycle full-screen red, green, blue, yellow and white to inspect the display | Each color lasts one second; double-tap the screen or press BOOT to exit. |
+| Settings | Adjust brightness/volume, scan Wi-Fi, open phone connection, and inspect SD card/device information | Drag the sliders; use the device hotspot web tools for Wi-Fi setup and image transfer; scroll longer pages vertically. |
+| AIChats | Voice conversation with expressions and text, plus voice control of volume and brightness | Requires Internet and a speaker; activate when prompted on first use; say "你好小智" or tap Talk to start, and tap Stop to end the current turn. |
+| Battery | Show charge level, charging/discharging state, voltage, current and capacity data | Switch between Overview and Details; connect the battery before USB. |
+| Touch Test | Draw touch trails to check coordinates and continuity | Draw on the screen; use the clear button to start again; tap the upper-left back button or press BOOT to exit. |
+| Photos | View full-screen JPEG images from the SD card | Put images in `photo/`; swipe left/right to change images and up from the bottom edge to exit. |
+| Weather | Show city, date, conditions, temperature, humidity, wind speed and direction | Requires Internet; tap the upper-right refresh button; readings already fetched during the current session remain available offline. |
+| Music | Play MP3 files from the SD card with track, progress and duration information | Put files in `music/`; use play/pause, previous and next controls; adjust volume in Settings. |
+| Sensor | Read RTC date/time and QMI8658 three-axis acceleration/angular velocity | Readings update automatically; move the board to observe motion values; no network required. |
+| 2048 | Merge numbered tiles and track score/best score | Swipe in four directions on the board; use the upper-right restart button or upper-left back button. |
+| Mic Test | Show separate microphone meters, record and play back each channel | Tap Record for up to five seconds, or Stop to finish early; use MIC1/MIC2 to play each recording; no SD card required. |
+| Button Test | Check BOOT input state and valid press counts | Press and release BOOT to obtain PASS; tap Test again to reset; BOOT is the test input in this APP. |
+| Video | Play AVI/MJPEG videos from the SD card | Put files in `video/` and select a list entry; tap the playback area to stop and return to the list; video audio tracks are not played. |
+| Gravity | Control simulated balls using the motion sensor | Hold the board still during calibration, then tilt it; press BOOT to recalibrate or tap back to exit. |
+| Badge | Store and display up to six static badge photos in internal Flash | Upload/crop in a browser, swipe between photos, and tap to open controls; no SD card needed; photos survive restart. |
+| Lucky Wheel | Full-screen wheel that randomly selects a number | Tap SPIN; use Options for 2–18 choices; no network or SD card required. |
+| Watch | Analog clock with time/date and synchronization status | Tap to cycle three views; RTC restores time at boot and network synchronization updates RTC; swipe up from the bottom edge or press BOOT to exit. |
+
 ## Hardware
 
 ESP32-S3-Touch-LCD-1.85B, a speaker and the supplied 3.7 V, 500 mAh battery; online features need 2.4 GHz Wi-Fi. For media, insert a FAT32 microSD card with JPEG images in `photo/`, MP3 files in `music/`, and AVI/MJPEG videos in `video/` (frames up to 360 × 360; video audio tracks are not played).
