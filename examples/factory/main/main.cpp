@@ -8,6 +8,9 @@
 #include "XiaozhiApp.hpp"
 #include "DrawingBoard.hpp"
 #include "Photos.hpp"
+#include "Badge.hpp"
+#include "LuckyWheel.hpp"
+#include "Watch.hpp"
 #include "Weather.hpp"
 #include "Music.hpp"
 #include "Sensor.hpp"
@@ -85,6 +88,9 @@ static bool app_start()
         {"Mic Test", MicTest::requestInstance()}, {"Button Test", ButtonTest::requestInstance()},
         {"Video", VideoPlayer::requestInstance()},
         {"Gravity", bsp_get_init_status()->imu == ESP_OK ? PhoneChipmunk2d::requestInstance() : nullptr},
+        {"Badge", Badge::requestInstance()},
+        {"Lucky Wheel", LuckyWheel::requestInstance()},
+        {"Watch", Watch::requestInstance()},
     };
     unsigned installed = 0;
     for (const auto &entry : apps) {
@@ -104,6 +110,7 @@ extern "C" void app_main(void)
     if (ret != ESP_OK) { ESP_LOGE(TAG, "BSP startup failed: %s", esp_err_to_name(ret)); return; }
     if (!settings_service_start()) ESP_LOGE(TAG, "Settings worker unavailable");
     if (!battery_service_start()) ESP_LOGE(TAG, "Battery worker unavailable");
+    if (!badge::prepare()) ESP_LOGW(TAG, "Badge web service unavailable");
     if (!wifi_manager_init()) ESP_LOGE(TAG, "Network worker unavailable");
     if (!app_start()) {
         ESP_LOGE(TAG, "Desktop startup failed");

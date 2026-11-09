@@ -15,17 +15,23 @@ void worker(void *)
 {
     esp_err_t last_error = ESP_ERR_NOT_FINISHED;
     BatteryState last_state = BatteryState::Reading;
+    int64_t next_warning_us = 0;
     for (;;) {
         BatterySnapshot next;
         next.error = bsp_battery_init();
         if (next.error == ESP_OK) next.error = bsp_battery_get_data(&next.data);
         next.sampled_us = esp_timer_get_time();
         const auto state = battery_state(next, next.sampled_us);
-        if (next.error != last_error || state != last_state) {
-            if (next.error == ESP_OK) ESP_LOGI("battery", "%s", battery_state_text(state));
-            else ESP_LOGW("battery", "BQ27220 read failed: %s", esp_err_to_name(next.error));
-            last_error = next.error;
+        if (next.error == ESP_OK && state != last_state) {
+            ESP_LOGI("battery", "%s", battery_state_text(state));
             last_state = state;
+        } else if (next.error != ESP_OK &&
+                   (next.error != last_error || next.sampled_us >= next_warning_us)) {
+            // Transient bus errors may alternate with missing-battery samples.
+            // Keep publishing real readings, but bound repeated warnings.
+            ESP_LOGW("battery", "BQ27220 read failed: %s", esp_err_to_name(next.error));
+            last_error = next.error;
+            next_warning_us = next.sampled_us + 60000000;
         }
         portENTER_CRITICAL(&mutex);
         snapshot = next;

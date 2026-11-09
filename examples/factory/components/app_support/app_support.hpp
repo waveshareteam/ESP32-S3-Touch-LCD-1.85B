@@ -48,11 +48,14 @@ inline lv_obj_t *screen(const char *title,lv_event_cb_t cb,void *ctx) {
 class AppWorker {
 public:
     virtual ~AppWorker() { configASSERT(!active_); }
-    bool start(const char *name,uint32_t stack=6144,UBaseType_t priority=2) {
+    // Flash filesystem users must select an internal stack: Flash operations
+    // may disable the cache that makes a PSRAM stack accessible.
+    bool start(const char *name,uint32_t stack=6144,UBaseType_t priority=2,
+               uint32_t stack_caps=MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT) {
         if(active_) return true;
         stop_=false; active_=true;
         if(xTaskCreatePinnedToCoreWithCaps(entry,name,stack,this,priority,nullptr,tskNO_AFFINITY,
-                                         MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT)!=pdPASS) { active_=false; return false; }
+                                         stack_caps)!=pdPASS) { active_=false; return false; }
         return true;
     }
     void stop() { stop_=true; while(active_) vTaskDelay(pdMS_TO_TICKS(10)); }

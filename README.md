@@ -34,14 +34,14 @@ ESP32-S3-Touch-LCD-1.85B combines a round touch display with audio, a motion sen
 
 ## 📦 Quick Start
 
-1. Download `ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin` from [factory firmware](firmware/README.md).
+1. Download `ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261109.bin` from [factory firmware](firmware/README.md).
 2. Install the flashing tool: `python -m pip install esptool`.
 3. Connect the board with a USB data cable and identify its serial port.
-4. Run these commands in the firmware directory, replacing `<PORT>` with the board port. Erasing clears settings stored on the board; back up required data first.
+4. Run these commands in the firmware directory, replacing `<PORT>` with the board port. Erasing clears settings and saved badge images; back up required data first.
 
    ```sh
    python -m esptool --chip esp32s3 --port <PORT> erase_flash
-   python -m esptool --chip esp32s3 --port <PORT> write_flash 0x0 ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261027.bin
+   python -m esptool --chip esp32s3 --port <PORT> write_flash 0x0 ESP32-S3-Touch-LCD-1.85B_FactoryOnly_20261109.bin
    ```
 
 5. Reset the board, connect Wi-Fi in Settings and open an application from the desktop.
@@ -60,7 +60,7 @@ Factory images are flashed at `0x0`; see the [firmware guide](firmware/README.md
 | [04_pcf85063](examples/esp-idf/04_pcf85063/) | RTC calendar reading and setting |
 | [05_bq27220](examples/esp-idf/05_bq27220/) | Battery charge, voltage, current and capacity |
 | [06_mic_test](examples/esp-idf/06_mic_test/) | Dual microphone meters, recording and per-channel playback |
-| [factory](examples/factory/) | Complete desktop, settings, media and voice chat applications |
+| [factory](examples/factory/) | Complete desktop, media, voice chat, Badge, Lucky Wheel and Watch |
 
 Use the standalone examples to test the display, touch, storage, sensors, clock, battery and dual microphone audio. The factory application provides the complete desktop and combined feature demonstrations.
 

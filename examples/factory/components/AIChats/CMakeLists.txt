@@ -8,7 +8,7 @@ idf_component_register(
     INCLUDE_DIRS ${PROJ_SRC}
     REQUIRES brookesia_core bsp_extra esp_audio_codec esp_audio_effects esp-sr
              xiaozhi-fonts esp_event esp_netif esp_xiaozhi nvs_flash esp_wifi
-    PRIV_REQUIRES app_update esp_http_client cjson efuse esp_hw_support
+    PRIV_REQUIRES network_service app_update esp_http_client cjson efuse esp_hw_support
                   esp_app_format esp_partition esp_timer mbedtls mcp-c-sdk spi_flash
 )
 
