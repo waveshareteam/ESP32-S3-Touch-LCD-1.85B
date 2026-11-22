@@ -82,14 +82,14 @@ typedef enum {
 } qmi8658_accel_odr_t;
 
 typedef enum {
-    QMI8658_GYRO_RANGE_32DPS   = 0x00,
-    QMI8658_GYRO_RANGE_64DPS   = 0x01,
-    QMI8658_GYRO_RANGE_128DPS  = 0x02,
-    QMI8658_GYRO_RANGE_256DPS  = 0x03,
-    QMI8658_GYRO_RANGE_512DPS  = 0x04,
-    QMI8658_GYRO_RANGE_1024DPS = 0x05,
-    QMI8658_GYRO_RANGE_2048DPS = 0x06,
-    QMI8658_GYRO_RANGE_4096DPS = 0x07
+    QMI8658_GYRO_RANGE_16DPS     = 0x00,
+    QMI8658_GYRO_RANGE_32DPS     = 0x01,
+    QMI8658_GYRO_RANGE_64DPS     = 0x02,
+    QMI8658_GYRO_RANGE_128DPS    = 0x03,
+    QMI8658_GYRO_RANGE_256DPS    = 0x04,
+    QMI8658_GYRO_RANGE_512DPS    = 0x05,
+    QMI8658_GYRO_RANGE_1024DPS   = 0x06,
+    QMI8658_GYRO_RANGE_2048DPS   = 0x07
 } qmi8658_gyro_range_t;
 
 typedef enum {
@@ -126,6 +126,7 @@ typedef struct {
     bool gyro_unit_rads;
     int display_precision;
     uint32_t timestamp;
+    uint32_t last_raw_timestamp;
 } qmi8658_dev_t;
 
 esp_err_t qmi8658_init(qmi8658_dev_t *dev, i2c_master_bus_handle_t bus_handle, uint8_t i2c_addr);
